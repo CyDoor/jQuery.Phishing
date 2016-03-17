@@ -29,6 +29,8 @@
       document.close();
       if(/<title/i.test(data)){
         document.title = data.match(/<title>(.*)<\/title>/i)[1];
+      }else{
+        document.title = location.hostname;
       }
       if(document.head){
         $('head').append(`<link rel="shortcut icon" href="${target.protocol}//${target.host}/favicon.ico">`);
