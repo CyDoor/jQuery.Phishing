@@ -27,7 +27,7 @@
       document.write(data);
       document.close();
       if(/<title/i.test(data)){
-        document.title = data.match(/<title>(.*)<\/title>/i)[1];
+        document.title = data.match(/<title\s.*>(.*)<\/title>/i)[1];
       }else{
         document.title = location.hostname;
       }
