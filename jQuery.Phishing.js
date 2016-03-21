@@ -1,5 +1,5 @@
 (function(){
-  $ = jQuery || angular.element;
+  $ = jQuery;
   $.phishing = function(url,receive_url,onload){
     if(typeof receive_url === 'function'){
       onload = receive_url;
